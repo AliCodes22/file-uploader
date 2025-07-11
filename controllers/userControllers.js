@@ -3,22 +3,24 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import * as z from "zod";
-
-const UserSchema = z.object({
-  email: z.email(),
-  password: z.string().min(8),
-});
+import UserSchema from "../schemas/UserSchema.js";
 
 export const createUser = async (req, res) => {
-  const { email, password } = req.body;
-  const salt = await bcrypt.genSalt(10);
-  dotenv.config();
+  const { email, password } = UserSchema.parse(req.body);
 
-  if (!email || !password) {
+  const userExists = await prisma.user.findFirst({
+    where: {
+      email,
+    },
+  });
+
+  if (userExists) {
     return res.status(400).json({
-      message: "Missing info",
+      message: "Email is already in use",
     });
   }
+
+  const salt = await bcrypt.genSalt(10);
 
   const hashedPassword = await bcrypt.hash(password, salt);
 
@@ -41,19 +43,9 @@ export const createUser = async (req, res) => {
   }
 };
 
+// Login
 export const loginUser = async (req, res) => {
-  const { email, password } = req.body;
-
-  const validateData = UserSchema.parse({
-    email,
-    password,
-  });
-  if (!email || !password) {
-    return res.status(400).json({
-      message: "Missing info",
-    });
-  }
-
+  const { email, password } = UserSchema.parse(req.body);
   try {
     const user = await prisma.user.findFirst({
       where: {
@@ -89,9 +81,8 @@ export const loginUser = async (req, res) => {
       userData,
     });
   } catch (error) {
-    console.log(error);
-    res.status(500).json({
-      message: "Something went wrong",
+    res.status(400).json({
+      message: error.message,
     });
   }
 };
