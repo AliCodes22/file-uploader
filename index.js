@@ -4,6 +4,7 @@ import prisma from "./utils/prisma.js";
 import userRouter from "./routes/userRouter.js";
 import dotenv from "dotenv";
 import folderRouter from "./routes/folderRouter.js";
+import fileRouter from "./routes/fileRouter.js";
 
 const app = express();
 
@@ -16,6 +17,7 @@ app.use(
 );
 app.use("/api/user", userRouter);
 app.use("/api/folders", folderRouter);
+app.use("/api/files", fileRouter);
 
 dotenv.config();
 
