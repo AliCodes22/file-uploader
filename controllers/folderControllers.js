@@ -42,3 +42,43 @@ export const getAllFolders = async (req, res) => {
     });
   }
 };
+
+export const addFile = async (req, res) => {
+  const { folderId } = req.params;
+  const file = req.file;
+
+  const { originalname, mimetype, size } = file;
+
+  try {
+    const folder = await prisma.folder.findFirst({
+      where: {
+        id: Number(folderId),
+      },
+      include: { files: true },
+    });
+
+    if (!folder) {
+      return res.status(404).json({
+        message: "Folder not found",
+      });
+    }
+
+    const newFile = await prisma.file.create({
+      data: {
+        originalName: originalname,
+        mimetype,
+        size,
+        folderId: Number(folderId),
+        userId: req.user.id,
+      },
+    });
+
+    const { files } = folder;
+
+    return res.status(201).json({
+      message: "File uploaded successfully",
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
