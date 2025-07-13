@@ -30,7 +30,7 @@ model Folder {
   createdAt DateTime @default(now())
   userId Int
   user User @relation(fields:[userId], references: [id])
-  files File[]
+  files File[] 
 }
 
 model File {
@@ -41,9 +41,9 @@ model File {
   mimetype String
   createdAt DateTime @default(now())
   userId Int
-  folderId Int?
+  folderId Int
   
   user User @relation(fields: [userId], references: [id])
-  folder Folder? @relation(fields: [folderId], references: [id])
+  folder Folder? @relation(fields: [folderId], references: [id], onDelete: Cascade)
 
 }

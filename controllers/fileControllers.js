@@ -64,12 +64,6 @@ export const deleteFile = async (req, res) => {
       });
     }
 
-    if (file.userId !== req.user.id) {
-      return res.status(403).json({
-        message: "Unauthorized",
-      });
-    }
-
     await prisma.file.delete({
       where: {
         id: Number(fileId),

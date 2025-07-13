@@ -83,3 +83,32 @@ export const addFile = async (req, res) => {
     console.log(error);
   }
 };
+
+export const getAllFiles = async (req, res) => {
+  const { folderId } = req.params;
+
+  try {
+    const folder = await prisma.folder.findFirst({
+      where: {
+        id: Number(folderId),
+      },
+      include: {
+        files: true,
+      },
+    });
+
+    if (!folder) {
+      return res.status(404).json({
+        message: "Folder not found",
+      });
+    }
+
+    const { files } = folder;
+
+    res.status(200).json(files);
+  } catch (error) {
+    return res.status(500).json({
+      message: "Server error",
+    });
+  }
+};

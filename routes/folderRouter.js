@@ -4,6 +4,7 @@ import {
   addFolder,
   getAllFolders,
   addFile,
+  getAllFiles,
 } from "../controllers/folderControllers.js";
 import { upload } from "../multer.js";
 
@@ -13,6 +14,7 @@ folderRouter.use(validateUser);
 
 folderRouter.post("/add", addFolder);
 folderRouter.get("/", getAllFolders);
+folderRouter.get("/:folderId", getAllFiles);
 folderRouter.post("/:folderId/files", upload.single("file"), addFile);
 
 export default folderRouter;
