@@ -45,9 +45,9 @@ export const getAllFolders = async (req, res) => {
 
 export const addFile = async (req, res) => {
   const { folderId } = req.params;
-  const file = req.file;
+  console.log(req.file);
 
-  const { originalname, mimetype, size } = file;
+  const { originalname, mimetype, size, filename } = req.file;
 
   try {
     const folder = await prisma.folder.findFirst({
@@ -70,6 +70,7 @@ export const addFile = async (req, res) => {
         size,
         folderId: Number(folderId),
         userId: req.user.id,
+        storedName: filename,
       },
     });
 
