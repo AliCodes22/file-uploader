@@ -5,6 +5,7 @@ import {
   getAllFolders,
   addFile,
   getAllFiles,
+  deleteFolder,
 } from "../controllers/folderControllers.js";
 import { upload } from "../multer.js";
 

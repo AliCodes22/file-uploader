@@ -1,5 +1,6 @@
 import folderSchema from "../schemas/FolderSchema.js";
 import prisma from "../utils/prisma.js";
+import cloudinary from "../utils/cloudinary.js";
 
 export const addFolder = async (req, res) => {
   try {
@@ -110,5 +111,35 @@ export const getAllFiles = async (req, res) => {
     return res.status(500).json({
       message: "Server error",
     });
+  }
+};
+
+export const deleteFolder = async (req, res) => {
+  const { folderId } = req.params;
+
+  try {
+    const folder = await prisma.folder.findFirst({
+      where: {
+        id: Number(folderId),
+      },
+    });
+
+    if (!folder) {
+      return res.status(404).json({
+        message: "Folder not found",
+      });
+    }
+
+    await prisma.folder.delete({
+      where: {
+        id: Number(folderId),
+      },
+    });
+
+    return res.status(200).json({
+      message: "Folder deleted successfully",
+    });
+  } catch (error) {
+    console.log(error);
   }
 };
