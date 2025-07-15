@@ -1,12 +1,12 @@
-import * as zod from "zod";
+import * as z from "zod";
 
 const FileSchema = z.object({
-  originalName: z.string().trim().min(1, {
+  originalname: z.string().trim().min(1, {
     message: "required",
   }),
   size: z.int(),
   mimetype: z.string(),
-  folderId: Int,
+  path: z.string(),
 });
 
 export default FileSchema;

@@ -1,6 +1,7 @@
 import prisma from "../utils/prisma.js";
 import path from "path";
 import { promises as fs } from "fs";
+import cloudinary from "../utils/cloudinary.js";
 
 export const getFile = async (req, res) => {
   const { fileId } = req.params;
@@ -40,9 +41,14 @@ export const downloadFile = async (req, res) => {
       });
     }
 
-    const filePath = path.resolve(process.cwd(), "uploads", file.storedName);
-
-    res.download(filePath);
+    if (!file.path) {
+      return res.status(404).json({
+        message: "Path not found",
+      });
+    }
+    return res.status(200).json({
+      url: file.path,
+    });
   } catch (error) {
     console.log(error);
   }
@@ -70,7 +76,7 @@ export const deleteFile = async (req, res) => {
       },
     });
 
-    await fs.unlink(path.resolve(process.cwd(), "uploads", file.storedName));
+    await cloudinary.uploader.destroy(file.path);
 
     return res.status(200).json({
       message: "File deleted successfully",

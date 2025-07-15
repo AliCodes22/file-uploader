@@ -1,6 +1,7 @@
 import folderSchema from "../schemas/FolderSchema.js";
 import prisma from "../utils/prisma.js";
 import cloudinary from "../utils/cloudinary.js";
+import FileSchema from "../schemas/FileSchema.js";
 
 export const addFolder = async (req, res) => {
   try {
@@ -48,7 +49,9 @@ export const addFile = async (req, res) => {
   const { folderId } = req.params;
   console.log(req.file);
 
-  const { originalname, mimetype, size, filename } = req.file;
+  const { originalname, mimetype, size, filename, path } = FileSchema.parse(
+    req.file
+  );
 
   try {
     const folder = await prisma.folder.findFirst({
@@ -71,11 +74,9 @@ export const addFile = async (req, res) => {
         size,
         folderId: Number(folderId),
         userId: req.user.id,
-        storedName: filename,
+        path,
       },
     });
-
-    const { files } = folder;
 
     return res.status(201).json({
       message: "File uploaded successfully",

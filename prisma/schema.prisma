@@ -36,12 +36,12 @@ model Folder {
 model File {
   id Int @id @default(autoincrement())
   originalName String 
-  storedName String?
   size Int
   mimetype String
   createdAt DateTime @default(now())
   userId Int
   folderId Int
+  path String
   
   user User @relation(fields: [userId], references: [id])
   folder Folder? @relation(fields: [folderId], references: [id], onDelete: Cascade)
