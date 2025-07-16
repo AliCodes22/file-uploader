@@ -42,6 +42,7 @@ model File {
   userId Int
   folderId Int
   path String
+  fileName String?
   
   user User @relation(fields: [userId], references: [id])
   folder Folder? @relation(fields: [folderId], references: [id], onDelete: Cascade)

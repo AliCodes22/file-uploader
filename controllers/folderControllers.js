@@ -75,6 +75,7 @@ export const addFile = async (req, res) => {
         folderId: Number(folderId),
         userId: req.user.id,
         path,
+        fileName: filename,
       },
     });
 

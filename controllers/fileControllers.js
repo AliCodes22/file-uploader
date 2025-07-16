@@ -76,7 +76,7 @@ export const deleteFile = async (req, res) => {
       },
     });
 
-    await cloudinary.uploader.destroy(file.path);
+    await cloudinary.uploader.destroy(file.fileName);
 
     return res.status(200).json({
       message: "File deleted successfully",
