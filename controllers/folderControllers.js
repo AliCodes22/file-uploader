@@ -124,6 +124,9 @@ export const deleteFolder = async (req, res) => {
       where: {
         id: Number(folderId),
       },
+      include: {
+        files: true,
+      },
     });
 
     if (!folder) {
@@ -131,6 +134,15 @@ export const deleteFolder = async (req, res) => {
         message: "Folder not found",
       });
     }
+
+    const { files } = folder;
+    console.log(folder);
+
+    await Promise.all(
+      files.map((file) => {
+        return cloudinary.uploader.destroy(file.fileName);
+      })
+    );
 
     await prisma.folder.delete({
       where: {

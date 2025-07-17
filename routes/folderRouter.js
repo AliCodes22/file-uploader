@@ -17,5 +17,6 @@ folderRouter.post("/add", addFolder);
 folderRouter.get("/", getAllFolders);
 folderRouter.get("/:folderId", getAllFiles);
 folderRouter.post("/:folderId/files", upload.single("file"), addFile);
+folderRouter.delete("/:folderId", deleteFolder);
 
 export default folderRouter;
