@@ -1,14 +1,36 @@
 import { useState } from "react";
+import { registerUser } from "../services/userService";
+import { useNavigate } from "react-router-dom";
 
-const Login = () => {
+const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const data = await registerUser(email, password);
+      console.log(data);
+
+      //   if (data) {
+      //     navigate("/");
+      //   }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-600 to-purple-700 px-4">
-      <form className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md space-y-6">
+      <form
+        className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md space-y-6"
+        onSubmit={handleSubmit}
+      >
         <h2 className="text-3xl font-bold text-indigo-700 text-center">
-          Login
+          Register
         </h2>
 
         <div>
@@ -51,11 +73,11 @@ const Login = () => {
           type="submit"
           className="w-full bg-yellow-300 text-indigo-900 font-semibold py-2 rounded-xl hover:bg-yellow-200 transition duration-200"
         >
-          Sign In
+          Register
         </button>
       </form>
     </div>
   );
 };
 
-export default Login;
+export default Register;
