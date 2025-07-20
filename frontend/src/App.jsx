@@ -1,5 +1,11 @@
+import Drive from "../pages/Drive";
+
 function App() {
-  return <>File Uploader</>;
+  return (
+    <div>
+      <Drive />
+    </div>
+  );
 }
 
 export default App;

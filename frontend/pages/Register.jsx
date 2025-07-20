@@ -13,11 +13,8 @@ const Register = () => {
 
     try {
       const data = await registerUser(email, password);
-      console.log(data);
 
-      //   if (data) {
-      //     navigate("/");
-      //   }
+      console.log(data);
     } catch (error) {
       console.log(error);
     }

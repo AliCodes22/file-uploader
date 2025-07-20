@@ -8,7 +8,7 @@ import UserContextProvider from "../context/UserContext.jsx";
 import Welcome from "../pages/Welcome.jsx";
 import Login from "../pages/Login.jsx";
 import Register from "../pages/Register.jsx";
-
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 const router = createBrowserRouter([
   {
     path: "/welcome",
@@ -23,21 +23,24 @@ const router = createBrowserRouter([
     element: <Register />,
   },
   {
-    path: "/",
+    path: "/drive",
     element: <ProtectedRoute />,
     children: [
       {
-        path: "/drive",
         element: <App />,
-        index: true,
       },
     ],
   },
 ]);
+
+const queryClient = new QueryClient();
+
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <UserContextProvider>
-      <RouterProvider router={router} />
-    </UserContextProvider>
+    <QueryClientProvider client={queryClient}>
+      <UserContextProvider>
+        <RouterProvider router={router} />
+      </UserContextProvider>
+    </QueryClientProvider>
   </StrictMode>
 );

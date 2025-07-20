@@ -1,12 +1,39 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { loginUser } from "../services/userService";
+import { UserContext } from "../context/UserContext";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const { token, setToken, setUser } = useContext(UserContext);
+
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const data = await loginUser(email, password);
+      setToken(data.token);
+      setUser(data.userData);
+      localStorage.setItem("token", data.token);
+
+      if (data) {
+        navigate("/drive");
+      }
+    } catch (error) {
+      console.log(error.response);
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-600 to-purple-700 px-4">
-      <form className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md space-y-6">
+      <form
+        className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md space-y-6"
+        onSubmit={handleSubmit}
+      >
         <h2 className="text-3xl font-bold text-indigo-700 text-center">
           Login
         </h2>
@@ -49,7 +76,7 @@ const Login = () => {
 
         <button
           type="submit"
-          className="w-full bg-yellow-300 text-indigo-900 font-semibold py-2 rounded-xl hover:bg-yellow-200 transition duration-200"
+          className="w-full bg-yellow-300 text-indigo-900 font-semibold py-2 rounded-xl hover:bg-yellow-200 hover:cursor-pointer transition duration-200"
         >
           Sign In
         </button>
