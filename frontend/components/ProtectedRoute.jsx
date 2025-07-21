@@ -5,7 +5,7 @@ import { Navigate, Outlet } from "react-router-dom";
 const ProtectedRoute = () => {
   const { token } = useContext(UserContext);
 
-  return token ? <Outlet /> : <Navigate to="/welcome" replace={true} />;
+  return token ? <Outlet /> : <Navigate to="/welcome" replace />;
 };
 
 export default ProtectedRoute;

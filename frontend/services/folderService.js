@@ -3,7 +3,9 @@ import axios from "axios";
 export const getAllFolders = async (token) => {
   try {
     const res = await axios.get("/api/folders", {
-      headers: `Bearer ${token}`,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     });
 
     return res.data;
