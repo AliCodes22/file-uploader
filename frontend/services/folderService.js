@@ -34,3 +34,17 @@ export const createFolder = async (token, name) => {
     console.log(error);
   }
 };
+
+export const getFolderFiles = async (token, id) => {
+  try {
+    const res = await axios.get(`/api/folders/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};

@@ -3,6 +3,7 @@ import { getAllFolders } from "../services/folderService";
 import { useContext } from "react";
 import { UserContext } from "../context/UserContext";
 import FormDialog from "../components/FormDialog";
+import { Link } from "react-router-dom";
 
 const Drive = () => {
   const { token, user } = useContext(UserContext);
@@ -42,12 +43,14 @@ const Drive = () => {
               key={id}
               className="bg-white shadow-md rounded-lg p-4 border hover:shadow-lg transition"
             >
-              <div className="text-indigo-600 font-semibold text-lg mb-1">
-                📁 {name}
-              </div>
-              <p className="text-xs text-gray-400 mt-1">
-                Created: {new Date(createdAt).toLocaleDateString()}
-              </p>
+              <Link to={`/drive/${id}`}>
+                <div className="text-indigo-600 font-semibold text-lg mb-1">
+                  📁 {name}
+                </div>
+                <p className="text-xs text-gray-400 mt-1">
+                  Created: {new Date(createdAt).toLocaleDateString()}
+                </p>
+              </Link>
             </li>
           );
         })}

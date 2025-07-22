@@ -15,6 +15,8 @@ import Login from "../pages/Login.jsx";
 import Register from "../pages/Register.jsx";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Drive from "../pages/Drive.jsx";
+import Folder from "../pages/Folder";
+
 const router = createBrowserRouter([
   {
     path: "/welcome",
@@ -34,11 +36,15 @@ const router = createBrowserRouter([
     children: [
       {
         element: <App />,
-        path: "/",
+        path: "/drive",
         children: [
           {
             path: "",
             element: <Drive />,
+          },
+          {
+            path: "/drive/:folderId",
+            element: <Folder />,
           },
         ],
       },

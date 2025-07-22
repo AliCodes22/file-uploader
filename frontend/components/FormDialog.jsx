@@ -22,7 +22,6 @@ export default function FormDialog({ showModal, setShowModal }) {
     try {
       const res = await createFolder(token, name);
       queryClient.invalidateQueries(["folderData"]);
-
       setShowModal(false);
     } catch (error) {
       console.log(error);
