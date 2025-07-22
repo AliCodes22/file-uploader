@@ -13,3 +13,24 @@ export const getAllFolders = async (token) => {
     throw new Error(error.message);
   }
 };
+
+export const createFolder = async (token, name) => {
+  try {
+    const res = await axios.post(
+      "/api/folders",
+      {
+        name,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};

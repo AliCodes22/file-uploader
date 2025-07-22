@@ -7,7 +7,28 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 
-export default function FormDialog({ showModal, setShowModal, handleSubmit }) {
+import { createFolder } from "../services/folderService";
+import { useState, useContext } from "react";
+import { UserContext } from "../context/UserContext";
+import { useQueryClient } from "@tanstack/react-query";
+
+export default function FormDialog({ showModal, setShowModal }) {
+  const [name, setName] = useState("");
+  const { token, setFolders } = useContext(UserContext);
+  const queryClient = useQueryClient();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await createFolder(token, name);
+      queryClient.invalidateQueries(["folderData"]);
+
+      setShowModal(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <React.Fragment>
       <Dialog open={showModal} onClose={() => setShowModal(false)}>
@@ -24,6 +45,8 @@ export default function FormDialog({ showModal, setShowModal, handleSubmit }) {
               type="text"
               fullWidth
               variant="standard"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
             />
             <DialogActions>
               <Button onClick={() => setShowModal(false)}>Cancel</Button>

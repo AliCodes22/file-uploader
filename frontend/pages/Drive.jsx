@@ -30,7 +30,30 @@ const Drive = () => {
 
   console.log(data);
 
-  return <div>Drive</div>;
+  return (
+    <div className="p-6">
+      <h2 className="text-2xl font-bold mb-4 text-indigo-700">Your Folders</h2>
+      <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {data.map((folder) => {
+          const { createdAt, id, name } = folder;
+
+          return (
+            <li
+              key={id}
+              className="bg-white shadow-md rounded-lg p-4 border hover:shadow-lg transition"
+            >
+              <div className="text-indigo-600 font-semibold text-lg mb-1">
+                📁 {name}
+              </div>
+              <p className="text-xs text-gray-400 mt-1">
+                Created: {new Date(createdAt).toLocaleDateString()}
+              </p>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
 };
 
 export default Drive;

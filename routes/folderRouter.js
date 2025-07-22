@@ -13,7 +13,7 @@ const folderRouter = Router();
 
 folderRouter.use(validateUser);
 
-folderRouter.post("/add", addFolder);
+folderRouter.post("/", addFolder);
 folderRouter.get("/", getAllFolders);
 folderRouter.get("/:folderId", getAllFiles);
 folderRouter.post("/:folderId/files", upload.single("file"), addFile);
