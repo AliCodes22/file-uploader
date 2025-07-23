@@ -1,12 +1,14 @@
 import { UserContext } from "../context/UserContext";
 import { getFolderFiles } from "../services/folderService";
 import { useQuery } from "@tanstack/react-query";
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { useParams } from "react-router-dom";
 
 const Folder = () => {
   const { folderId } = useParams();
   const { token } = useContext(UserContext);
+
+  const [file, setFile] = useState(null);
 
   const { isPending, error, data } = useQuery({
     queryKey: ["files", folderId],
@@ -33,14 +35,18 @@ const Folder = () => {
     <div className="p-6 space-y-4">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold text-indigo-700">Files</h2>
-        <button
-          className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-500 transition"
-          onClick={() => {
-            // upload logic goes here
-          }}
-        >
+
+        <label className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-500 transition cursor-pointer inline-block">
           ⬆️ Upload File
-        </button>
+          <input
+            type="file"
+            className="hidden"
+            onChange={(e) => {
+              setFile(e.target.files[0]);
+              console.log(e.target.files);
+            }}
+          />
+        </label>
       </div>
 
       {data.length === 0 ? (
@@ -60,6 +66,16 @@ const Folder = () => {
             <p className="text-sm text-gray-500">{file.createdAt}</p>
           </div>
         ))
+      )}
+
+      {file && (
+        <div>
+          {file.name}
+          {file.size}
+          {file.type}
+
+          <button type="submit">Upload</button>
+        </div>
       )}
     </div>
   );

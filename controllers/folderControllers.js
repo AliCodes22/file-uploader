@@ -87,7 +87,8 @@ export const addFile = async (req, res) => {
     });
 
     return res.status(201).json({
-      message: "File uploaded successfully",
+      message: "File added",
+      folder,
     });
   } catch (error) {
     console.log(error);
