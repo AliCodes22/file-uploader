@@ -48,3 +48,18 @@ export const getFolderFiles = async (token, id) => {
     console.log(error);
   }
 };
+
+export const addFile = async ({ token, folderId, file }) => {
+  try {
+    const res = await axios.post(`/api/folders/${folderId}/files`, file, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return res.data;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};

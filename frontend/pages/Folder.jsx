@@ -1,8 +1,9 @@
 import { UserContext } from "../context/UserContext";
-import { getFolderFiles } from "../services/folderService";
+import { addFile, getFolderFiles } from "../services/folderService";
 import { useQuery } from "@tanstack/react-query";
 import React, { useContext, useState } from "react";
 import { useParams } from "react-router-dom";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const Folder = () => {
   const { folderId } = useParams();
@@ -10,10 +11,39 @@ const Folder = () => {
 
   const [file, setFile] = useState(null);
 
+  const queryClient = useQueryClient();
+
   const { isPending, error, data } = useQuery({
     queryKey: ["files", folderId],
     queryFn: () => getFolderFiles(token, folderId),
   });
+
+  const addFileMutation = useMutation({
+    mutationFn: addFile,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["files", folderId],
+      });
+    },
+  });
+
+  const formData = new FormData();
+  formData.append("file", file);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log(formData);
+
+    try {
+      addFileMutation.mutate({
+        token,
+        folderId,
+        file: formData,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   if (isPending) {
     return (
@@ -69,12 +99,32 @@ const Folder = () => {
       )}
 
       {file && (
-        <div>
-          {file.name}
-          {file.size}
-          {file.type}
+        <div className="fixed bottom-4 right-4 w-72 bg-white border border-indigo-200 rounded-lg shadow-lg p-4 animate-slide-up">
+          <h3 className="text-indigo-700 font-semibold mb-2 flex items-center">
+            📄 File ready to upload
+          </h3>
 
-          <button type="submit">Upload</button>
+          <div className="space-y-1 text-sm text-gray-700 mb-3">
+            <p>
+              <span className="font-medium">Name:</span> {file.name}
+            </p>
+            <p>
+              <span className="font-medium">Type:</span>{" "}
+              {file.type || "Unknown"}
+            </p>
+            <p>
+              <span className="font-medium">Size:</span>{" "}
+              {(file.size / 1024).toFixed(2)} KB
+            </p>
+          </div>
+
+          <button
+            type="submit"
+            onClick={handleSubmit}
+            className="w-full bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-500 transition"
+          >
+            Upload File
+          </button>
         </div>
       )}
     </div>
