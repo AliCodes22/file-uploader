@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import React, { useContext, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import File from "../components/File";
 
 const Folder = () => {
   const { folderId } = useParams();
@@ -87,15 +88,7 @@ const Folder = () => {
           </p>
         </div>
       ) : (
-        data.map((file) => (
-          <div
-            key={file.id}
-            className="p-4 bg-white rounded-lg shadow border hover:shadow-md transition"
-          >
-            <p className="text-indigo-700 font-medium">{file.name}</p>
-            <p className="text-sm text-gray-500">{file.createdAt}</p>
-          </div>
-        ))
+        data.map((file) => <File file={file} key={file.id} path={file.path} />)
       )}
 
       {file && (
