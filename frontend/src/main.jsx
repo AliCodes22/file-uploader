@@ -36,7 +36,7 @@ const router = createBrowserRouter([
     children: [
       {
         element: <App />,
-        path: "/drive",
+        path: "/",
         children: [
           {
             path: "",

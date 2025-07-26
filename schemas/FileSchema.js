@@ -8,6 +8,7 @@ const FileSchema = z.object({
   mimetype: z.string(),
   path: z.string(),
   filename: z.string(),
+  extension: z.string().optional(),
 });
 
 export default FileSchema;

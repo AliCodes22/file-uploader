@@ -11,6 +11,7 @@ const Folder = () => {
   const { token } = useContext(UserContext);
 
   const [file, setFile] = useState(null);
+  const [showUpload, setShowUpload] = useState(false);
 
   const queryClient = useQueryClient();
 
@@ -25,6 +26,7 @@ const Folder = () => {
       queryClient.invalidateQueries({
         queryKey: ["files", folderId],
       });
+      setFile(null);
     },
   });
 
@@ -61,6 +63,8 @@ const Folder = () => {
       </div>
     );
   }
+
+  console.log(data);
 
   return (
     <div className="p-6 space-y-4">

@@ -59,7 +59,7 @@ export const addFile = async ({ token, folderId, file }) => {
 
     return res.data;
   } catch (error) {
-    console.log(error);
+    console.log(error.message);
     throw error;
   }
 };
