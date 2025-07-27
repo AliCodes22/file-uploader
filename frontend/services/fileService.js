@@ -12,3 +12,13 @@ export const downloadFile = async (token, fileId) => {
     console.log(error);
   }
 };
+
+export const getDownloadUrl = (filePath, fileName) => {
+  // Example filePath:
+  // https://res.cloudinary.com/dyvl7nycf/raw/upload/v1753523753/file-uploader-app/xqa4qnyycxd7w6oomyuk
+
+  // Insert "fl_attachment:filename/" right after "upload/"
+  const parts = filePath.split("/upload/");
+  const downloadUrl = `${parts[0]}/upload/fl_attachment:${fileName}/${parts[1]}`;
+  return downloadUrl;
+};

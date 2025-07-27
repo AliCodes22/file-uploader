@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { downloadFile } from "../services/fileService";
+import { downloadFile, getDownloadUrl } from "../services/fileService";
 import { Download } from "lucide-react";
 import { UserContext } from "../context/UserContext";
 import { Link } from "react-router-dom";
