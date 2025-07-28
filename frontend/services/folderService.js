@@ -63,3 +63,18 @@ export const addFile = async ({ token, folderId, file }) => {
     throw error;
   }
 };
+
+export const deleteFolder = async (token, folderId) => {
+  try {
+    const res = await axios.delete(`/api/folders/${folderId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    console.log(res);
+
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};

@@ -1,16 +1,23 @@
-import { useQuery } from "@tanstack/react-query";
-import { getAllFolders } from "../services/folderService";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { deleteFolder, getAllFolders } from "../services/folderService";
 import { useContext } from "react";
 import { UserContext } from "../context/UserContext";
 import FormDialog from "../components/FormDialog";
 import { Link } from "react-router-dom";
+import { Trash2 } from "lucide-react";
 
 const Drive = () => {
   const { token, user } = useContext(UserContext);
+  const queryClient = useQueryClient();
 
   const { isPending, error, data } = useQuery({
     queryKey: ["folderData"],
     queryFn: () => getAllFolders(token),
+  });
+
+  const { mutate } = useMutation({
+    mutationFn: ({ token, folderId }) => deleteFolder(token, folderId),
+    onSuccess: () => queryClient.invalidateQueries(["folderData"]),
   });
 
   if (isPending) {
@@ -29,7 +36,12 @@ const Drive = () => {
     );
   }
 
-  console.log(data);
+  const handleDelete = (folderId) => {
+    mutate({
+      token,
+      folderId,
+    });
+  };
 
   return (
     <div className="p-6">
@@ -51,6 +63,7 @@ const Drive = () => {
                   Created: {new Date(createdAt).toLocaleDateString()}
                 </p>
               </Link>
+              <Trash2 onClick={() => handleDelete(id)} />
             </li>
           );
         })}
