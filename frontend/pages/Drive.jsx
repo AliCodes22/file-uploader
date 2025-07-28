@@ -43,6 +43,15 @@ const Drive = () => {
     });
   };
 
+  if (data.length === 0) {
+    return (
+      <div className="text-gray-600 text-center mt-10">
+        <p>No folders found. 📂</p>
+        <p className="text-sm">Create a folder to get started.</p>
+      </div>
+    );
+  }
+
   return (
     <div className="p-6">
       <h2 className="text-2xl font-bold mb-4 text-indigo-700">Your Folders</h2>
@@ -63,7 +72,10 @@ const Drive = () => {
                   Created: {new Date(createdAt).toLocaleDateString()}
                 </p>
               </Link>
-              <Trash2 onClick={() => handleDelete(id)} />
+              <Trash2
+                onClick={() => handleDelete(id)}
+                className="hover:cursor-pointer"
+              />
             </li>
           );
         })}

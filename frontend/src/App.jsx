@@ -40,7 +40,7 @@ const App = () => {
       <main className="flex-1 p-6">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-2xl font-semibold text-indigo-700">
-            Welcome, {user?.name}
+            Welcome, {user?.email}
           </h2>
         </div>
 

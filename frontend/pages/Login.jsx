@@ -21,7 +21,7 @@ const Login = () => {
       localStorage.setItem("token", data.token);
 
       if (data) {
-        navigate("/drive");
+        navigate("/");
       }
     } catch (error) {
       console.log(error.response);

@@ -22,3 +22,16 @@ export const getDownloadUrl = (filePath, fileName) => {
   const downloadUrl = `${parts[0]}/upload/fl_attachment:${fileName}/${parts[1]}`;
   return downloadUrl;
 };
+
+export const deleteFile = async (token, fileId) => {
+  try {
+    const res = await axios.delete(`/api/files/${fileId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    console.log(res);
+  } catch (error) {
+    console.log(error);
+  }
+};
