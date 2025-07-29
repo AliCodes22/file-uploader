@@ -32,13 +32,23 @@ export const createUser = async (req, res) => {
       },
     });
 
-    return res.status(201).json(newUser, {
-      message: "User created!",
+    const token = jwt.sign(
+      {
+        userId: newUser.id,
+      },
+      process.env.SECRET_JWT_KEY
+    );
+    console.log(token);
+
+    return res.status(201).json({
+      token,
+      newUser,
     });
   } catch (error) {
     console.log(error);
     res.status(500).json({
-      message: "Something went wrong",
+      success: false,
+      message: "Unable to create user",
     });
   }
 };
@@ -85,4 +95,20 @@ export const loginUser = async (req, res) => {
       message: error.message,
     });
   }
+};
+
+export const deleteUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    await prisma.user.delete({
+      where: {
+        id: Number(id),
+      },
+    });
+
+    return res.status(200).json({
+      message: "user deleted",
+    });
+  } catch (error) {}
 };

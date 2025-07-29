@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { registerUser } from "../services/userService";
 import { useNavigate } from "react-router-dom";
+import { UserContext } from "../context/UserContext";
 
 const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { setToken } = useContext(UserContext);
 
   const navigate = useNavigate();
 
@@ -13,10 +15,16 @@ const Register = () => {
 
     try {
       const data = await registerUser(email, password);
-
       console.log(data);
+
+      if (data?.token) {
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("user", JSON.stringify(data.newUser));
+        setToken(data.token);
+        navigate("/");
+      }
     } catch (error) {
-      console.log(error);
+      throw new Error(error.message);
     }
   };
 
