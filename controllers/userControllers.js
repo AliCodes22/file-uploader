@@ -5,26 +5,26 @@ import dotenv from "dotenv";
 import * as z from "zod";
 import UserSchema from "../schemas/UserSchema.js";
 
-export const createUser = async (req, res) => {
-  const { email, password } = UserSchema.parse(req.body);
-
-  const userExists = await prisma.user.findFirst({
-    where: {
-      email,
-    },
-  });
-
-  if (userExists) {
-    return res.status(400).json({
-      message: "Email is already in use",
-    });
-  }
-
-  const salt = await bcrypt.genSalt(10);
-
-  const hashedPassword = await bcrypt.hash(password, salt);
-
+export const createUser = async (req, res, next) => {
   try {
+    const { email, password } = UserSchema.parse(req.body);
+
+    const userExists = await prisma.user.findFirst({
+      where: {
+        email,
+      },
+    });
+
+    if (userExists) {
+      const error = new Error("Email is already in use");
+      error.statusCode = 400;
+      return next(error);
+    }
+
+    const salt = await bcrypt.genSalt(10);
+
+    const hashedPassword = await bcrypt.hash(password, salt);
+
     const newUser = await prisma.user.create({
       data: {
         email,
@@ -32,31 +32,29 @@ export const createUser = async (req, res) => {
       },
     });
 
+    const { password: hashed, ...userData } = newUser;
+
     const token = jwt.sign(
       {
         userId: newUser.id,
       },
       process.env.SECRET_JWT_KEY
     );
-    console.log(token);
 
     return res.status(201).json({
       token,
-      newUser,
+      userData,
     });
   } catch (error) {
-    console.log(error);
-    res.status(500).json({
-      success: false,
-      message: "Unable to create user",
-    });
+    next(error);
   }
 };
 
 // Login
 export const loginUser = async (req, res) => {
-  const { email, password } = UserSchema.parse(req.body);
   try {
+    const { email, password } = UserSchema.parse(req.body);
+
     const user = await prisma.user.findFirst({
       where: {
         email,
@@ -64,17 +62,17 @@ export const loginUser = async (req, res) => {
     });
 
     if (!user) {
-      return res.status(401).json({
-        message: "User not found",
-      });
+      const error = new Error("User doesn't exist");
+      error.statusCode = 401;
+      return next(error);
     }
 
     const match = await bcrypt.compare(password, user.password);
 
     if (!match) {
-      return res.status(401).json({
-        message: "Incorrect password",
-      });
+      const error = "Incorrect password";
+      error.statusCode = 401;
+      return next(error);
     }
 
     const token = jwt.sign(
@@ -91,9 +89,7 @@ export const loginUser = async (req, res) => {
       userData,
     });
   } catch (error) {
-    res.status(400).json({
-      message: error.message,
-    });
+    next(error);
   }
 };
 
@@ -110,5 +106,10 @@ export const deleteUser = async (req, res) => {
     return res.status(200).json({
       message: "user deleted",
     });
-  } catch (error) {}
+  } catch (error) {
+    return res.status(500).json({
+      message: "Unable to delete",
+      success: false,
+    });
+  }
 };

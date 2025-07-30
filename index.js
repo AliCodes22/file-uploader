@@ -5,6 +5,7 @@ import userRouter from "./routes/userRouter.js";
 import dotenv from "dotenv";
 import folderRouter from "./routes/folderRouter.js";
 import fileRouter from "./routes/fileRouter.js";
+import { errorMiddleware } from "./middleware/errorMiddleware.js";
 
 const app = express();
 
@@ -24,3 +25,5 @@ dotenv.config();
 app.listen(3000, () => {
   console.log("app is on");
 });
+
+app.use(errorMiddleware);
