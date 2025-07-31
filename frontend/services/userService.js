@@ -1,4 +1,5 @@
 import axios from "axios";
+import { handleAxiosError } from "./handleAxiosError";
 
 export const registerUser = async (email, password) => {
   try {
@@ -17,7 +18,7 @@ export const registerUser = async (email, password) => {
 
     return res.data;
   } catch (error) {
-    console.log(error.message);
+    return handleAxiosError(error);
   }
 };
 
@@ -37,6 +38,6 @@ export const loginUser = async (email, password) => {
     );
     return res.data;
   } catch (error) {
-    return error.response.data;
+    return handleAxiosError(error);
   }
 };

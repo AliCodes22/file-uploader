@@ -1,4 +1,5 @@
 import axios from "axios";
+import { handleAxiosError } from "./handleAxiosError";
 
 export const getAllFolders = async (token) => {
   try {
@@ -10,7 +11,7 @@ export const getAllFolders = async (token) => {
 
     return res.data;
   } catch (error) {
-    throw new Error(error.message);
+    handleAxiosError(error);
   }
 };
 
@@ -31,7 +32,7 @@ export const createFolder = async (token, name) => {
 
     return res.data;
   } catch (error) {
-    console.log(error);
+    return handleAxiosError(error);
   }
 };
 
@@ -45,7 +46,7 @@ export const getFolderFiles = async (token, id) => {
 
     return res.data;
   } catch (error) {
-    console.log(error);
+    return handleAxiosError(error);
   }
 };
 
@@ -59,8 +60,7 @@ export const addFile = async ({ token, folderId, file }) => {
 
     return res.data;
   } catch (error) {
-    console.log(error.message);
-    throw error;
+    return handleAxiosError(error);
   }
 };
 
@@ -71,10 +71,8 @@ export const deleteFolder = async (token, folderId) => {
         Authorization: `Bearer ${token}`,
       },
     });
-    console.log(res);
-
     return res.data;
   } catch (error) {
-    console.log(error);
+    return handleAxiosError(error);
   }
 };

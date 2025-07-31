@@ -3,7 +3,7 @@ import path from "path";
 import { promises as fs } from "fs";
 import cloudinary from "../utils/cloudinary.js";
 
-export const getFile = async (req, res) => {
+export const getFile = async (req, res, next) => {
   const { fileId } = req.params;
 
   try {
@@ -14,18 +14,18 @@ export const getFile = async (req, res) => {
     });
 
     if (!file) {
-      return res.status(404).json({
-        message: "File not found",
-      });
+      const error = new Error("File not found");
+      error.statusCode = 404;
+      return next(error);
     }
 
     return res.status(200).json(file);
   } catch (error) {
-    console.log(error);
+    return next(error);
   }
 };
 
-export const downloadFile = async (req, res) => {
+export const downloadFile = async (req, res, next) => {
   const { fileId } = req.params;
 
   try {
@@ -36,25 +36,25 @@ export const downloadFile = async (req, res) => {
     });
 
     if (!file) {
-      return res.status(404).json({
-        message: "File not found",
-      });
+      const error = new Error("File not found");
+      error.statusCode = 404;
+      return next(error);
     }
 
     if (!file.path) {
-      return res.status(404).json({
-        message: "Path not found",
-      });
+      const error = new Error("Path not found");
+      error.statusCode = 404;
+      return next(error);
     }
     return res.status(200).json({
       url: file.path,
     });
   } catch (error) {
-    console.log(error);
+    return next(error);
   }
 };
 
-export const deleteFile = async (req, res) => {
+export const deleteFile = async (req, res, next) => {
   const { fileId } = req.params;
 
   try {
@@ -65,9 +65,9 @@ export const deleteFile = async (req, res) => {
     });
 
     if (!file) {
-      return res.status(404).json({
-        message: "file not found",
-      });
+      const error = new Error("File not found");
+      error.statusCode = 404;
+      return next(error);
     }
 
     await prisma.file.delete({
@@ -82,6 +82,6 @@ export const deleteFile = async (req, res) => {
       message: "File deleted successfully",
     });
   } catch (error) {
-    console.error(error);
+    return next(error);
   }
 };

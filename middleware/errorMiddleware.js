@@ -1,5 +1,17 @@
+import { ZodError } from "zod";
+
 export const errorMiddleware = (error, req, res, next) => {
   console.error(error.stack);
+
+  if (error instanceof ZodError) {
+    return res.status(400).json({
+      success: false,
+      message: "invalid input",
+      errors: error.errors.map((err) => ({
+        field: err.pa,
+      })),
+    });
+  }
 
   const statusCode = error.statusCode || 500;
 

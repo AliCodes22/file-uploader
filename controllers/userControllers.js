@@ -46,12 +46,12 @@ export const createUser = async (req, res, next) => {
       userData,
     });
   } catch (error) {
-    next(error);
+    return next(error);
   }
 };
 
 // Login
-export const loginUser = async (req, res) => {
+export const loginUser = async (req, res, next) => {
   try {
     const { email, password } = UserSchema.parse(req.body);
 
@@ -70,7 +70,7 @@ export const loginUser = async (req, res) => {
     const match = await bcrypt.compare(password, user.password);
 
     if (!match) {
-      const error = "Incorrect password";
+      const error = new Error("incorrect password");
       error.statusCode = 401;
       return next(error);
     }
@@ -89,7 +89,7 @@ export const loginUser = async (req, res) => {
       userData,
     });
   } catch (error) {
-    next(error);
+    return next(error);
   }
 };
 

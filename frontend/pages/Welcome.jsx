@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 
 const Welcome = () => {
+  console.log("rendered");
+
   return (
     <div className="min-h-screen flex flex-col justify-center items-center bg-gradient-to-br from-indigo-600 to-purple-700 text-white px-4">
       <h1 className="text-4xl md:text-6xl font-bold mb-6 text-center drop-shadow-lg">

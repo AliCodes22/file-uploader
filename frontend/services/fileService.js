@@ -1,4 +1,5 @@
 import axios from "axios";
+import { handleAxiosError } from "./handleAxiosError";
 
 export const downloadFile = async (token, fileId) => {
   try {
@@ -9,7 +10,7 @@ export const downloadFile = async (token, fileId) => {
     });
     console.log(res.data);
   } catch (error) {
-    console.log(error);
+    return handleAxiosError(error);
   }
 };
 
@@ -32,6 +33,6 @@ export const deleteFile = async (token, fileId) => {
     });
     console.log(res);
   } catch (error) {
-    console.log(error);
+    return handleAxiosError(error);
   }
 };

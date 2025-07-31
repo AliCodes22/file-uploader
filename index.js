@@ -22,8 +22,8 @@ app.use("/api/files", fileRouter);
 
 dotenv.config();
 
+app.use(errorMiddleware);
+
 app.listen(3000, () => {
   console.log("app is on");
 });
-
-app.use(errorMiddleware);

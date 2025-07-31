@@ -8,6 +8,7 @@ const UserContextProvider = ({ children }) => {
     const currentUser = localStorage.getItem("user");
     return currentUser ? JSON.parse(currentUser) : null;
   });
+
   const [folders, setFolders] = useState([]);
 
   useEffect(() => {

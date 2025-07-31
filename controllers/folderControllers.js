@@ -3,7 +3,7 @@ import prisma from "../utils/prisma.js";
 import cloudinary from "../utils/cloudinary.js";
 import FileSchema from "../schemas/FileSchema.js";
 
-export const addFolder = async (req, res) => {
+export const addFolder = async (req, res, next) => {
   try {
     const { name } = folderSchema.parse(req.body);
     const { id } = req.user;
@@ -17,7 +17,7 @@ export const addFolder = async (req, res) => {
 
     const folders = await prisma.folder.findMany({
       where: {
-        id: req.user.id,
+        userId: req.user.id,
       },
     });
 
@@ -26,13 +26,11 @@ export const addFolder = async (req, res) => {
       folders,
     });
   } catch (error) {
-    return res.status(400).json({
-      message: "Invalid fields",
-    });
+    return next(error);
   }
 };
 
-export const getAllFolders = async (req, res) => {
+export const getAllFolders = async (req, res, next) => {
   try {
     const folders = await prisma.folder.findMany({
       where: {
@@ -46,13 +44,11 @@ export const getAllFolders = async (req, res) => {
 
     return res.status(200).json(folders);
   } catch (error) {
-    return res.status(500).json({
-      message: "server error",
-    });
+    return next(error);
   }
 };
 
-export const addFile = async (req, res) => {
+export const addFile = async (req, res, next) => {
   const { folderId } = req.params;
 
   const { originalname, mimetype, size, filename, path } = FileSchema.parse(
@@ -72,9 +68,9 @@ export const addFile = async (req, res) => {
     });
 
     if (!folder) {
-      return res.status(404).json({
-        message: "Folder not found",
-      });
+      const error = new Error("Folder not found");
+      error.statusCode = 404;
+      return next(error);
     }
 
     const newFile = await prisma.file.create({
@@ -95,11 +91,11 @@ export const addFile = async (req, res) => {
       folder,
     });
   } catch (error) {
-    console.log(error);
+    return next(error);
   }
 };
 
-export const getAllFiles = async (req, res) => {
+export const getAllFiles = async (req, res, next) => {
   const { folderId } = req.params;
 
   try {
@@ -113,22 +109,20 @@ export const getAllFiles = async (req, res) => {
     });
 
     if (!folder) {
-      return res.status(404).json({
-        message: "Folder not found",
-      });
+      const error = new Error("Folder not found");
+      error.statusCode = 404;
+      return next(error);
     }
 
     const { files } = folder;
 
     res.status(200).json(files);
   } catch (error) {
-    return res.status(500).json({
-      message: "Server error",
-    });
+    return next(error);
   }
 };
 
-export const deleteFolder = async (req, res) => {
+export const deleteFolder = async (req, res, next) => {
   const { folderId } = req.params;
 
   try {
@@ -142,13 +136,12 @@ export const deleteFolder = async (req, res) => {
     });
 
     if (!folder) {
-      return res.status(404).json({
-        message: "Folder not found",
-      });
+      const error = new Error("Folder not found");
+      error.statusCode = 404;
+      return next(error);
     }
 
     const { files } = folder;
-    console.log(folder);
 
     await Promise.all(
       files.map((file) => {
@@ -166,6 +159,6 @@ export const deleteFolder = async (req, res) => {
       message: "Folder deleted successfully",
     });
   } catch (error) {
-    console.log(error);
+    return next(error);
   }
 };
