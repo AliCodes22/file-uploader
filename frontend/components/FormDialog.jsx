@@ -11,6 +11,7 @@ import { createFolder } from "../services/folderService";
 import { useState, useContext } from "react";
 import { UserContext } from "../context/UserContext";
 import { useQueryClient } from "@tanstack/react-query";
+import toast from "react-hot-toast";
 
 export default function FormDialog({ showModal, setShowModal }) {
   const [name, setName] = useState("");
@@ -19,13 +20,16 @@ export default function FormDialog({ showModal, setShowModal }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const res = await createFolder(token, name);
-      queryClient.invalidateQueries(["folderData"]);
-      setShowModal(false);
-    } catch (error) {
-      console.log(error);
+
+    const data = await createFolder(token, name);
+
+    if (data.success === false) {
+      toast.error("Unable to create folder");
     }
+
+    queryClient.invalidateQueries(["folderData"]);
+    setShowModal(false);
+    toast.success("Folder created successfully!!");
   };
 
   return (

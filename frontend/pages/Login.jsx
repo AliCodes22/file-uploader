@@ -2,6 +2,7 @@ import { useContext, useState } from "react";
 import { loginUser } from "../services/userService";
 import { UserContext } from "../context/UserContext";
 import { useNavigate } from "react-router-dom";
+import toast, { Toaster } from "react-hot-toast";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -14,17 +15,19 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    try {
-      const data = await loginUser(email, password);
+    const data = await loginUser(email, password);
+
+    if (data.success === false) {
+      toast.error(data.message || "Unable to login");
+      return;
+    }
+
+    if (data?.token) {
       setToken(data.token);
       setUser(data.userData);
       localStorage.setItem("token", data.token);
-
-      if (data) {
-        navigate("/");
-      }
-    } catch (error) {
-      console.log(error.response);
+      toast.success("Login successful");
+      navigate("/");
     }
   };
 

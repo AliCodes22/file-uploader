@@ -2,6 +2,7 @@ import { useContext, useState } from "react";
 import { registerUser } from "../services/userService";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../context/UserContext";
+import toast, { Toaster } from "react-hot-toast";
 
 const Register = () => {
   const [email, setEmail] = useState("");
@@ -13,18 +14,19 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    try {
-      const data = await registerUser(email, password);
-      console.log(data);
+    const data = await registerUser(email, password);
 
-      if (data?.token) {
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("user", JSON.stringify(data.newUser));
-        setToken(data.token);
-        navigate("/");
-      }
-    } catch (error) {
-      throw new Error(error.message);
+    if (data.success === false) {
+      toast.error(data.message || "Unable to create user");
+      return;
+    }
+
+    if (data?.token) {
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.newUser));
+      setToken(data.token);
+      navigate("/");
+      toast.success("User created successfully");
     }
   };
 
@@ -81,6 +83,7 @@ const Register = () => {
           Register
         </button>
       </form>
+      <Toaster />
     </div>
   );
 };

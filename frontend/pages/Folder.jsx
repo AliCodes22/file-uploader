@@ -5,6 +5,7 @@ import React, { useContext, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import File from "../components/File";
+import toast from "react-hot-toast";
 
 const Folder = () => {
   const { folderId } = useParams();
@@ -35,14 +36,20 @@ const Folder = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
 
     try {
-      addFileMutation.mutate({
-        token,
-        folderId,
-        file: formData,
-      });
+      toast.promise(
+        addFileMutation.mutateAsync({
+          token,
+          folderId,
+          file: formData,
+        }),
+        {
+          loading: "Saving...",
+          success: <b>File uploaded</b>,
+          error: <b>Could not upload</b>,
+        }
+      );
     } catch (error) {
       console.log(error);
     }

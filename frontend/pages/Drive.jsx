@@ -5,6 +5,7 @@ import { UserContext } from "../context/UserContext";
 import FormDialog from "../components/FormDialog";
 import { Link, Navigate } from "react-router-dom";
 import { Trash2 } from "lucide-react";
+import toast from "react-hot-toast";
 
 const Drive = () => {
   const { token, user } = useContext(UserContext);
@@ -17,7 +18,10 @@ const Drive = () => {
 
   const { mutate } = useMutation({
     mutationFn: ({ token, folderId }) => deleteFolder(token, folderId),
-    onSuccess: () => queryClient.invalidateQueries(["folderData"]),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["folderData"]);
+      toast.success("Folder deleted successfully");
+    },
   });
 
   if (isPending) {

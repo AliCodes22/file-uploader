@@ -2,6 +2,7 @@ import { Outlet, useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
 import { UserContext } from "../context/UserContext";
 import FormDialog from "../components/FormDialog";
+import { Toaster } from "react-hot-toast";
 
 const App = () => {
   const { user, setToken, setUser } = useContext(UserContext);
@@ -48,6 +49,7 @@ const App = () => {
           <FormDialog setShowModal={setShowModal} showModal={showModal} />
         )}
         <Outlet />
+        <Toaster position="top-right" reverseOrder={false} />
       </main>
     </div>
   );
