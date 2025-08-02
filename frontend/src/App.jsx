@@ -49,7 +49,6 @@ const App = () => {
           <FormDialog setShowModal={setShowModal} showModal={showModal} />
         )}
         <Outlet />
-        <Toaster position="top-right" reverseOrder={false} />
       </main>
     </div>
   );

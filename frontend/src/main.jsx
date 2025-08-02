@@ -16,6 +16,7 @@ import Register from "../pages/Register.jsx";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Drive from "../pages/Drive.jsx";
 import Folder from "../pages/Folder";
+import { Toaster } from "react-hot-toast";
 
 const router = createBrowserRouter([
   {
@@ -61,5 +62,6 @@ createRoot(document.getElementById("root")).render(
         <RouterProvider router={router} />
       </UserContextProvider>
     </QueryClientProvider>
+    <Toaster position="top-right" reverseOrder={false} />
   </StrictMode>
 );

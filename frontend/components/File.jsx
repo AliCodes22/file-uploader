@@ -8,6 +8,7 @@ import { Download, Trash, Trash2Icon } from "lucide-react";
 import { UserContext } from "../context/UserContext";
 import { Link } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
+import toast from "react-hot-toast";
 
 const File = ({ file }) => {
   const { token } = useContext(UserContext);
@@ -19,6 +20,7 @@ const File = ({ file }) => {
       queryClient.invalidateQueries({
         queryKey: ["files"],
       });
+      toast.success("File deleted");
     } catch (error) {
       console.log(error);
     }

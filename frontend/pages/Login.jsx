@@ -2,7 +2,7 @@ import { useContext, useState } from "react";
 import { loginUser } from "../services/userService";
 import { UserContext } from "../context/UserContext";
 import { useNavigate } from "react-router-dom";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -18,7 +18,7 @@ const Login = () => {
     const data = await loginUser(email, password);
 
     if (data.success === false) {
-      toast.error(data.message || "Unable to login");
+      toast.error(data.message);
       return;
     }
 
